@@ -6,20 +6,26 @@ import net.stomdesignsoftware.rewards.api.Test;
 import net.stomdesignsoftware.rewards.api.Trigger;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.scheduler.Task;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
-public class RewardManager {
+public class RewardManager implements Consumer<Task> {
 
     private Map<String, Class<? extends Reward>> rewardMap;
     private Map<String, Class<? extends Test>> testMap;
     private Map<String, Class<? extends Trigger>> triggerMap;
 
-    private List<NormalReward> normalRewards;
+    private LinkedList<NormalReward> normalRewards;
     private List<TriggerReward> triggerRewards;
+    private Task task;
 
     public RewardManager() {
         this.rewardMap = new HashMap<>();
@@ -27,6 +33,17 @@ public class RewardManager {
         this.triggerMap = new HashMap<>();
         this.normalRewards = new LinkedList<>();
         this.triggerRewards = new LinkedList<>();
+    }
+
+    public void sumbit(Object plugin, long interval) {
+        task = Sponge.getScheduler().createTaskBuilder().execute(this).interval(interval, TimeUnit.MINUTES).submit(plugin);
+    }
+
+    public void cancel() {
+        if(task == null)
+            return;
+
+        task.cancel();
     }
 
     public void loadConfig(ConfigurationNode rootNode) {
@@ -144,6 +161,14 @@ public class RewardManager {
         }
     }
 
+    public LinkedList<NormalReward> getNormalRewards() {
+        return normalRewards;
+    }
+
+    public List<TriggerReward> getTriggerRewards() {
+        return triggerRewards;
+    }
+
     public void registerReward(String name, Class<? extends Reward> rewardClass) {
         if (rewardMap.containsKey(name)) {
             Rewards.logger().error("Name {} is already a Reward", name, new RuntimeException());
@@ -166,5 +191,15 @@ public class RewardManager {
         }
 
         triggerMap.put(name, triggerClass);
+    }
+
+    //NormalRewards task
+    @Override public void accept(Task task) {
+
+        //Circulate NormalRewards list
+        NormalReward reward = normalRewards.pop();
+        normalRewards.add(reward);
+
+        Sponge.getServer().getOnlinePlayers().forEach(reward::test);
     }
 }
