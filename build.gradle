@@ -1,0 +1,27 @@
+group 'net.stormdesignsoftware'
+version '1.0.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'sponge'
+        url = 'http://repo.spongepowered.org/maven'
+    }
+}
+
+dependencies {
+    compile 'org.spongepowered:spongeapi:4.0.3'
+}
+
+//Use -PserverPath=path/to/server
+task jarToServer (type: Copy) {
+    from jar
+    into projectDir.toString() + project.hasProperty("serverPath") ? project.getProperties().get("serverPath") : "/server/mods"
+}
