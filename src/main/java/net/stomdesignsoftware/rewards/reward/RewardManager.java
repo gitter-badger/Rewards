@@ -5,6 +5,7 @@ import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Test;
 import net.stomdesignsoftware.rewards.api.Trigger;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -118,6 +119,7 @@ public class RewardManager {
                         if (!trigger.init(oNode)) {
                             continue;
                         }
+
                         triggers.add(trigger);
                     } catch (InstantiationException e) {
                         Rewards.logger().error("Unable to instantiate a trigger.", e);
@@ -132,7 +134,12 @@ public class RewardManager {
                     continue;
                 }
 
-                triggerRewards.add(new TriggerReward(triggers, rewards));
+                //Create TriggerReward and register it and all Triggers as listeners
+                triggers.forEach(trigger -> Sponge.getEventManager().registerListeners(Rewards.instance, trigger));
+                TriggerReward triggerReward = new TriggerReward(triggers, rewards);
+                Sponge.getEventManager().registerListeners(Rewards.instance, triggerReward);
+
+                triggerRewards.add(triggerReward);
             }
         }
     }
