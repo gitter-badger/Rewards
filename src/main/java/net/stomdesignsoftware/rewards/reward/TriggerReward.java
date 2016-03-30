@@ -1,18 +1,18 @@
 package net.stomdesignsoftware.rewards.reward;
 
 import net.stomdesignsoftware.rewards.api.Reward;
+import net.stomdesignsoftware.rewards.api.Trigger;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class TriggerReward {
 
-    private List<String> triggers;
+    private List<Trigger> triggers;
     private List<Reward> rewards;
 
-    public TriggerReward() {
-        this.triggers = new LinkedList<>();
-        this.rewards = new LinkedList<>();
+    public TriggerReward(List<Trigger> triggers, List<Reward> rewards) {
+        this.triggers = triggers;
+        this.rewards = rewards;
     }
 
 }

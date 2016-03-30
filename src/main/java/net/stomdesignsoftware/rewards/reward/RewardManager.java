@@ -28,8 +28,113 @@ public class RewardManager {
         this.triggerRewards = new LinkedList<>();
     }
 
-    public void loadConfig(ConfigurationNode node) {
+    public void loadConfig(ConfigurationNode rootNode) {
+        this.normalRewards.clear();
+        this.triggerRewards.clear();
 
+        for (ConfigurationNode node : rootNode.getChildrenMap().values()) {
+            if (node.getNode("rewards").isVirtual()) {
+                Rewards.logger().warn("Invalid section. Doesn't contain a \"rewards\" section. Section: {}", node.getKey().toString());
+                continue;
+            }
+
+            if (node.getNode("tests").isVirtual() && node.getNode("triggers").isVirtual()) {
+                Rewards.logger()
+                        .warn("Invalid section. Doesn't contain a \"tests\" or a \"triggers\" section. Section: {}", node.getKey().toString());
+                continue;
+            }
+
+            //Parse Rewards
+            List<Reward> rewards = new LinkedList<>();
+
+            for (ConfigurationNode oNode : node.getNode("rewards").getChildrenMap().values()) {
+                if (!rewardMap.containsKey(oNode.getKey().toString())) {
+                    continue;
+                }
+
+                try {
+                    Reward reward = rewardMap.get(oNode.getKey().toString()).newInstance();
+                    if (!reward.init(oNode)) {
+                        continue;
+                    }
+                    rewards.add(reward);
+                } catch (InstantiationException e) {
+                    Rewards.logger().error("Unable to instantiate a reward.", e);
+                } catch (IllegalAccessException e) {
+                    Rewards.logger().error("Don't have access to a reward.", e);
+                }
+            }
+
+            if (rewards.isEmpty()) {
+                Rewards.logger().warn("Invalid section. \"rewards\" either has invalid rewards or doesn't contain anything. Section: {}",
+                        node.getKey().toString());
+                continue;
+            }
+
+
+            if (!node.getNode("tests").isVirtual()) {
+                //Parse Tests
+
+                List<Test> tests = new LinkedList<>();
+
+                for (ConfigurationNode oNode : node.getNode("tests").getChildrenMap().values()) {
+                    if (!testMap.containsKey(oNode.getKey().toString())) {
+                        continue;
+                    }
+
+                    try {
+                        Test test = testMap.get(oNode.getKey().toString()).newInstance();
+                        if (!test.init(oNode)) {
+                            continue;
+                        }
+                        tests.add(test);
+                    } catch (InstantiationException e) {
+                        Rewards.logger().error("Unable to instantiate a test.", e);
+                    } catch (IllegalAccessException e) {
+                        Rewards.logger().error("Don't have access to a test.", e);
+                    }
+                }
+
+                if (tests.isEmpty()) {
+                    Rewards.logger().warn("Invalid section. \"tests\" either has invalid tests or doesn't contain anything. Section: {}",
+                            node.getKey().toString());
+                    continue;
+                }
+
+                normalRewards.add(new NormalReward(tests, rewards));
+
+            } else {
+                //Parse Triggers
+
+                List<Trigger> triggers = new LinkedList<>();
+
+                for (ConfigurationNode oNode : node.getNode("triggers").getChildrenMap().values()) {
+                    if (!testMap.containsKey(oNode.getKey().toString())) {
+                        continue;
+                    }
+
+                    try {
+                        Trigger trigger = triggerMap.get(oNode.getKey().toString()).newInstance();
+                        if (!trigger.init(oNode)) {
+                            continue;
+                        }
+                        triggers.add(trigger);
+                    } catch (InstantiationException e) {
+                        Rewards.logger().error("Unable to instantiate a trigger.", e);
+                    } catch (IllegalAccessException e) {
+                        Rewards.logger().error("Don't have access to a trigger.", e);
+                    }
+                }
+
+                if (triggers.isEmpty()) {
+                    Rewards.logger().warn("Invalid section. \"triggers\" either has invalid triggers or doesn't contain anything. Section: {}",
+                            node.getKey().toString());
+                    continue;
+                }
+
+                triggerRewards.add(new TriggerReward(triggers, rewards));
+            }
+        }
     }
 
     public void registerReward(String name, Class<? extends Reward> rewardClass) {
