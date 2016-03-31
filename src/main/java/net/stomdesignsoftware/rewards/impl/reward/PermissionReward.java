@@ -12,32 +12,47 @@ public class PermissionReward implements Reward {
     private String permission;
     private boolean value;
 
-    @Override
-    public boolean init(ConfigurationNode node) {
-        if (node.getNode("permission").isVirtual())
-            return false;
+    @Override public boolean init(ConfigurationNode node) {
+        boolean subNode = true;
 
-        Object value = node.getNode("permission").getValue();
-        if (!(value instanceof String))
+        if (node.getNode("permission").isVirtual()) {
+            subNode = false;
+        }
+
+        Object value;
+
+        if (subNode) {
+            value = node.getNode("permission").getValue();
+        } else {
+            value = node.getValue();
+            this.value = true;
+        }
+
+        if (!(value instanceof String)) {
             return false;
+        }
 
         permission = (String) value;
 
-        if (node.getNode("value").isVirtual()) {
+        if(node.getNode("value").isVirtual()) {
             this.value = true;
-            return true;
+            subNode = false;
         }
 
-        value = node.getNode("value").getValue();
-        if (!(value instanceof Boolean))
-            return false;
+        if (subNode) {
+            value = node.getNode("value").getValue();
 
-        this.value = (Boolean) value;
+            if (!(value instanceof Boolean)) {
+                return false;
+            }
+
+            this.value = (Boolean) value;
+        }
+
         return true;
     }
 
-    @Override
-    public boolean reward(Player player) {
+    @Override public boolean reward(Player player) {
         if (player.getSubjectData().getPermissions(SubjectData.GLOBAL_CONTEXT).containsKey(permission)) {
             if (player.getSubjectData().getPermissions(SubjectData.GLOBAL_CONTEXT).get(permission) == value) {
                 Rewards.debug("{} already has {} permission", player.getName(), permission);

@@ -1,12 +1,14 @@
 package net.stomdesignsoftware.rewards;
 
 import com.google.inject.Inject;
+import net.stomdesignsoftware.rewards.reward.RewardManager;
 import net.stomdesignsoftware.rewards.util.Config;
 import org.slf4j.Logger;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.nio.file.Path;
@@ -22,6 +24,7 @@ public class Rewards {
     private Config settingsConfig;
     private Config rewardsConfig;
     private Settings settings;
+    private RewardManager rewardManager;
 
     public static Logger logger() {
         return instance.logger;
@@ -49,7 +52,14 @@ public class Rewards {
         this.settingsConfig.serialize(Settings.MAPPER, settings);
         this.settingsConfig.save();
 
+        //Init Reward Manager
+        this.rewardManager = new RewardManager();
+    }
 
+    @Listener public void onLoad(GameLoadCompleteEvent event) {
+        //Start Reward Manager
+        this.rewardManager.loadConfig(rewardsConfig.getRoot());
+        this.rewardManager.sumbit(this, settings.INTERVAL);
     }
 
     public Path getConfigDir() {
@@ -58,5 +68,21 @@ public class Rewards {
 
     public Settings getSettings() {
         return settings;
+    }
+
+    public RewardManager getRewardManager() {
+        return rewardManager;
+    }
+
+    public void reload() {
+        this.rewardManager.cancel();
+        this.rewardsConfig.reload();
+        this.settingsConfig.reload();
+        this.settings = settingsConfig.repopulate(Settings.MAPPER, settings).orElseGet(() -> {
+            Rewards.logger().error("Unable to repopulate Settings. Going to defaults.");
+            return new Settings();
+        });
+        this.rewardManager.loadConfig(rewardsConfig.getRoot());
+        this.rewardManager.sumbit(this, settings.INTERVAL);
     }
 }
