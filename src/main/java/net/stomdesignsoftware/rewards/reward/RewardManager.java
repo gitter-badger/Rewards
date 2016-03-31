@@ -4,6 +4,7 @@ import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Test;
 import net.stomdesignsoftware.rewards.api.Trigger;
+import net.stomdesignsoftware.rewards.event.RewardTaskTickEvent;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -195,6 +196,9 @@ public class RewardManager implements Consumer<Task> {
 
     //NormalRewards task
     @Override public void accept(Task task) {
+        //Run event
+        Sponge.getEventManager().post(new RewardTaskTickEvent(task.getName(), TimeUnit.MINUTES.convert(
+            task.getInterval(), TimeUnit.MILLISECONDS)));
 
         //Circulate NormalRewards list
         NormalReward reward = normalRewards.pop();

@@ -27,6 +27,10 @@ public class Rewards {
         return instance.logger;
     }
 
+    public static void debug(String format, Object... args) {
+        logger().info(format, args);
+    }
+
     @Listener public void onConstruct(GameConstructionEvent event) {
         instance = this;
     }
@@ -46,5 +50,13 @@ public class Rewards {
         this.settingsConfig.save();
 
 
+    }
+
+    public Path getConfigDir() {
+        return configDir;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }

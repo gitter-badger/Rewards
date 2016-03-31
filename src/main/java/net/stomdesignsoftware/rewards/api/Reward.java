@@ -9,6 +9,4 @@ public interface Reward {
     boolean init(ConfigurationNode node);
 
     boolean reward(Player player);
-
-    Text getRewardText();
 }
