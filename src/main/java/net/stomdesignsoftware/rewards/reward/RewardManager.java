@@ -36,7 +36,7 @@ public class RewardManager implements Consumer<Task> {
         this.triggerRewards = new LinkedList<>();
     }
 
-    public void sumbit(Object plugin, long interval) {
+    public void submit(Object plugin, long interval) {
         task = Sponge.getScheduler().createTaskBuilder().execute(this).interval(interval, TimeUnit.MINUTES).submit(plugin);
     }
 

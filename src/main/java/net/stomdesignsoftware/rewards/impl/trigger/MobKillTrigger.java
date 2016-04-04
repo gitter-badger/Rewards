@@ -5,6 +5,7 @@ import net.stomdesignsoftware.rewards.api.Trigger;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
@@ -16,15 +17,18 @@ public class MobKillTrigger implements Trigger {
 
     private EntityType entityType;
 
-    @Override public boolean init(ConfigurationNode node) {
+    @Override
+    public boolean init(ConfigurationNode node) {
         Object value = node.getValue();
         if (!(value instanceof String)) {
             return false;
         }
 
         Optional<EntityType> type = Sponge.getRegistry().getType(EntityType.class, (String) value);
-        if(!type.isPresent()) {
-            Rewards.logger().warn("Invalid entity type {}. Types: {}", value, Sponge.getRegistry().getAllOf(EntityType.class));
+        if (!type.isPresent()) {
+            Rewards.logger().warn("Invalid entity type {}. Types: {}", value, Sponge.getRegistry().getAllOf(EntityType.class).stream().filter(entityType ->
+                    Creature.class.isAssignableFrom(entityType.getEntityClass())
+            ));
             return false;
         }
 
@@ -32,8 +36,9 @@ public class MobKillTrigger implements Trigger {
         return true;
     }
 
-    @Listener public void onMobKill(DestructEntityEvent.Death event, @First Player player) {
-        if (event.getTargetEntity().getType().equals(entityType)) {
+    @Listener
+    public void onMobKill(DestructEntityEvent.Death event, @First Player player) {
+        if (entityType.getEntityClass().isAssignableFrom(event.getTargetEntity().getType().getEntityClass())) {
             trigger(player);
         }
     }

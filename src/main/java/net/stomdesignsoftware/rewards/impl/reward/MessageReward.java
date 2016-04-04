@@ -16,7 +16,7 @@ public class MessageReward implements Reward {
     @Override public boolean init(ConfigurationNode node) {
         boolean subNode = false;
 
-        if(node.getNode("message").isVirtual()) {
+        if(!node.getNode("message").isVirtual()) {
             subNode = true;
         }
 

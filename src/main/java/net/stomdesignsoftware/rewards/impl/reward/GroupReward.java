@@ -13,18 +13,33 @@ public class GroupReward implements Reward {
 
     private static PermissionService permissionService;
     private String groupName;
+    private boolean setGroup;
     private Subject group;
 
     private static PermissionService permissions() {
         if (permissionService == null)
             permissionService = Sponge.getServiceManager().provide(PermissionService.class)
-                .orElseThrow(() -> new RuntimeException("Couldn't get a permission service"));
+                    .orElseThrow(() -> new RuntimeException("Couldn't get a permission service"));
         return permissionService;
     }
 
     @Override
     public boolean init(ConfigurationNode node) {
-        Object value = node.getValue();
+        boolean subNode = false;
+
+        //Group
+        if (!node.getNode("group").isVirtual()) {
+            subNode = true;
+        }
+
+        Object value;
+
+        if (subNode) {
+            value = node.getNode("group").getValue();
+        } else {
+            value = node.getNode();
+        }
+
         if (!(value instanceof String))
             return false;
 
@@ -35,6 +50,23 @@ public class GroupReward implements Reward {
         }
 
         group = permissions().getGroupSubjects().get(groupName);
+
+        //Set Group
+        if (node.getNode("setgroup").isVirtual()) {
+            subNode = false;
+        }
+
+        if (subNode) {
+            value = node.getNode("setgroup").getValue();
+
+            if (!(value instanceof Boolean))
+                return false;
+
+            setGroup = (Boolean) value;
+        } else {
+            setGroup = false;
+        }
+
         return true;
     }
 
@@ -45,8 +77,16 @@ public class GroupReward implements Reward {
             return false;
         }
 
-        player.getSubjectData().addParent(SubjectData.GLOBAL_CONTEXT, group);
-        Rewards.debug("{} is now in {} group.", player.getName(), groupName);
+        if (setGroup) {
+            permissions().getGroupSubjects().getAllSubjects().forEach(subject ->
+                    player.getSubjectData().removeParent(SubjectData.GLOBAL_CONTEXT, subject));
+            player.getSubjectData().addParent(SubjectData.GLOBAL_CONTEXT, group);
+            Rewards.debug("{} is now only in {} group.", player.getName(), groupName);
+        } else {
+            player.getSubjectData().addParent(SubjectData.GLOBAL_CONTEXT, group);
+            Rewards.debug("{} is now in {} group.", player.getName(), groupName);
+        }
+
         return true;
     }
 }

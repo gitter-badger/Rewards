@@ -1,6 +1,12 @@
 package net.stomdesignsoftware.rewards;
 
 import com.google.inject.Inject;
+import net.stomdesignsoftware.rewards.impl.reward.CommandReward;
+import net.stomdesignsoftware.rewards.impl.reward.GroupReward;
+import net.stomdesignsoftware.rewards.impl.reward.MessageReward;
+import net.stomdesignsoftware.rewards.impl.reward.PermissionReward;
+import net.stomdesignsoftware.rewards.impl.test.PlaytimeTest;
+import net.stomdesignsoftware.rewards.impl.trigger.MobKillTrigger;
 import net.stomdesignsoftware.rewards.reward.RewardManager;
 import net.stomdesignsoftware.rewards.util.Config;
 import org.slf4j.Logger;
@@ -54,12 +60,25 @@ public class Rewards {
 
         //Init Reward Manager
         this.rewardManager = new RewardManager();
+
+        //Register Rewards
+        this.rewardManager.registerReward("group", GroupReward.class);
+        this.rewardManager.registerReward("permission", PermissionReward.class);
+        this.rewardManager.registerReward("message", MessageReward.class);
+        this.rewardManager.registerReward("hotbarmessage", MessageReward.class);
+        this.rewardManager.registerReward("command", CommandReward.class);
+
+        //Register Tests
+        this.rewardManager.registerTest("playtime", PlaytimeTest.class);
+
+        //Register Trigger
+        this.rewardManager.registerTrigger("mobkill", MobKillTrigger.class);
     }
 
     @Listener public void onLoad(GameLoadCompleteEvent event) {
         //Start Reward Manager
         this.rewardManager.loadConfig(rewardsConfig.getRoot());
-        this.rewardManager.sumbit(this, settings.INTERVAL);
+        this.rewardManager.submit(this, settings.INTERVAL);
     }
 
     public Path getConfigDir() {
@@ -83,6 +102,6 @@ public class Rewards {
             return new Settings();
         });
         this.rewardManager.loadConfig(rewardsConfig.getRoot());
-        this.rewardManager.sumbit(this, settings.INTERVAL);
+        this.rewardManager.submit(this, settings.INTERVAL);
     }
 }
