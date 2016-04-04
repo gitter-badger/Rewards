@@ -131,9 +131,14 @@ local.properties
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+<<<<<<< HEAD
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 #Folder-based project format:
+=======
+
+## Folder-based project format:
+>>>>>>> e00fef019af312e2ae024c2161729bdcd1d9b8d2
 .idea/
 
 ## File-based project format:
