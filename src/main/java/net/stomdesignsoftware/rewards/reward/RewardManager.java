@@ -129,7 +129,7 @@ public class RewardManager implements Consumer<Task> {
                     continue;
                 }
 
-                normalRewards.add(new NormalReward(tests, rewards));
+                normalRewards.add(new NormalReward(node.getKey().toString(), tests, rewards));
 
             } else {
                 //Parse Triggers
@@ -164,7 +164,7 @@ public class RewardManager implements Consumer<Task> {
 
                 //Create TriggerReward and register it and all Triggers as listeners
                 triggers.forEach(trigger -> Sponge.getEventManager().registerListeners(Rewards.instance, trigger));
-                TriggerReward triggerReward = new TriggerReward(triggers, rewards);
+                TriggerReward triggerReward = new TriggerReward(node.getKey().toString(), triggers, rewards);
                 Sponge.getEventManager().registerListeners(Rewards.instance, triggerReward);
 
                 triggerRewards.add(triggerReward);

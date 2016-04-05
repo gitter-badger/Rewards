@@ -9,10 +9,12 @@ import java.util.List;
 
 public class NormalReward {
 
+    private String name;
     private List<Test> tests;
     private List<Reward> rewards;
 
-    public NormalReward(List<Test> tests, List<Reward> rewards) {
+    public NormalReward(String name, List<Test> tests, List<Reward> rewards) {
+        this.name = name;
         this.tests = tests;
         this.rewards = rewards;
     }
@@ -33,6 +35,6 @@ public class NormalReward {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("Tests", tests).add("Rewards", rewards).toString();
+        return Objects.toStringHelper(this).add("Name", name).add("Tests", tests).add("Rewards", rewards).toString();
     }
 }

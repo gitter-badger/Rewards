@@ -10,10 +10,12 @@ import java.util.List;
 
 public class TriggerReward {
 
+    private String name;
     private List<Trigger> triggers;
     private List<Reward> rewards;
 
-    public TriggerReward(List<Trigger> triggers, List<Reward> rewards) {
+    public TriggerReward(String name, List<Trigger> triggers, List<Reward> rewards) {
+        this.name = name;
         this.triggers = triggers;
         this.rewards = rewards;
     }
@@ -26,6 +28,6 @@ public class TriggerReward {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("Triggers", triggers).add("Rewards", rewards).toString();
+        return Objects.toStringHelper(this).add("Name", name).add("Triggers", triggers).add("Rewards", rewards).toString();
     }
 }
