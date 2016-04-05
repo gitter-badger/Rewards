@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.reward;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Trigger;
 import net.stomdesignsoftware.rewards.event.RewardTriggerEvent;
@@ -23,4 +24,8 @@ public class TriggerReward {
         }
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Triggers", triggers).add("Rewards", rewards).toString();
+    }
 }

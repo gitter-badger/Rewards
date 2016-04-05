@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.reward;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Test;
 import org.spongepowered.api.entity.living.player.Player;
@@ -30,5 +31,8 @@ public class NormalReward {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Tests", tests).add("Rewards", rewards).toString();
+    }
 }

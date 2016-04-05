@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.impl.reward;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -63,6 +64,11 @@ public class MessageReward implements Reward {
     @Override public boolean reward(Player player) {
         player.sendMessage(message);
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Message", message.toPlain()).toString();
     }
 
     private enum TextType {

@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.impl.reward;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -63,5 +64,10 @@ public class PermissionReward implements Reward {
         player.getSubjectData().setPermission(SubjectData.GLOBAL_CONTEXT, permission, Tristate.fromBoolean(value));
         Rewards.debug("{} now has {} permission.", player.getName(), permission);
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Permission", permission).add("Value", value).toString();
     }
 }

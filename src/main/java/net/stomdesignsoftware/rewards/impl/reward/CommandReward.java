@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.impl.reward;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -50,6 +51,11 @@ public class CommandReward implements Reward {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Command", command).add("Args", args).toString();
     }
 
     private String formatCommand(Player player) {

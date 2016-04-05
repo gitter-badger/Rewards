@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.impl.reward;
 
+import com.google.common.base.Objects;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.chat.ChatTypes;
 

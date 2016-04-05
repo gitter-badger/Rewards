@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.reward;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Test;
@@ -28,6 +29,8 @@ public class RewardManager implements Consumer<Task> {
     private List<TriggerReward> triggerRewards;
     private Task task;
 
+    private boolean loaded = false;
+
     public RewardManager() {
         this.rewardMap = new HashMap<>();
         this.testMap = new HashMap<>();
@@ -37,7 +40,10 @@ public class RewardManager implements Consumer<Task> {
     }
 
     public void submit(Object plugin, long interval) {
-        task = Sponge.getScheduler().createTaskBuilder().execute(this).interval(interval, TimeUnit.MINUTES).submit(plugin);
+        if(loaded)
+            task = Sponge.getScheduler().createTaskBuilder().execute(this).interval(interval, TimeUnit.MINUTES).submit(plugin);
+        else
+            Rewards.logger().warn("Can't start RewardTask because it is not completely loaded or it doesn't have any normal rewards.");
     }
 
     public void cancel() {
@@ -50,6 +56,7 @@ public class RewardManager implements Consumer<Task> {
     public void loadConfig(ConfigurationNode rootNode) {
         this.normalRewards.clear();
         this.triggerRewards.clear();
+        this.loaded = false;
 
         for (ConfigurationNode node : rootNode.getChildrenMap().values()) {
             if (node.getNode("rewards").isVirtual()) {
@@ -205,5 +212,10 @@ public class RewardManager implements Consumer<Task> {
         normalRewards.add(reward);
 
         Sponge.getServer().getOnlinePlayers().forEach(reward::test);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Normal Rewards", normalRewards).add("Trigger Rewards", triggerRewards).toString();
     }
 }

@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.impl.trigger;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Trigger;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -34,6 +35,11 @@ public class MobKillTrigger implements Trigger {
 
         this.entityType = type.get();
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Entity Type", entityType.getId()).toString();
     }
 
     @Listener

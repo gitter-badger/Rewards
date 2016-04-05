@@ -1,5 +1,6 @@
 package net.stomdesignsoftware.rewards.impl.test;
 
+import com.google.common.base.Objects;
 import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Test;
@@ -39,6 +40,11 @@ public class PlaytimeTest implements Test {
     public boolean testPlayer(Player player) {
         long playTime = data().getNode(player.getUniqueId().toString()).getLong();
         return playTime >= testTime;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("Test Time", testTime).toString();
     }
 
     private final static class EventListener {
