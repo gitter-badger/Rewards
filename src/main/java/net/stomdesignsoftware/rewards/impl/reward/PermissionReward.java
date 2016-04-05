@@ -20,34 +20,23 @@ public class PermissionReward implements Reward {
             subNode = false;
         }
 
-        Object value;
-
         if (subNode) {
-            value = node.getNode("permission").getValue();
+            permission = node.getNode("permission").getString();
         } else {
-            value = node.getValue();
-            this.value = true;
+            permission = node.getString();
         }
 
-        if (!(value instanceof String)) {
+        if(permission == null)
             return false;
-        }
-
-        permission = (String) value;
 
         if(node.getNode("value").isVirtual()) {
-            this.value = true;
             subNode = false;
         }
 
         if (subNode) {
-            value = node.getNode("value").getValue();
-
-            if (!(value instanceof Boolean)) {
-                return false;
-            }
-
-            this.value = (Boolean) value;
+            value = node.getNode("value").getBoolean();
+        } else {
+            value = true;
         }
 
         return true;

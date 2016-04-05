@@ -20,6 +20,5 @@ dependencies {
 //Use -PserverPath=/path/to/server
 task jarToServer(type: Copy) {
     from jar
-    into project.getProjectDir().toString() + project.getProperties().containsKey("serverPath") ?
-            project.getProperties().get("serverPath").toString() : "/server/mods"
+    into project.getProjectDir().toString() + "/server/mods"
 }

@@ -33,18 +33,15 @@ public class GroupReward implements Reward {
             subNode = true;
         }
 
-        Object value;
-
         if (subNode) {
-            value = node.getNode("group").getValue();
+            groupName = node.getNode("group").getString();
         } else {
-            value = node.getNode();
+            groupName = node.getString();
         }
 
-        if (!(value instanceof String))
+        if (groupName == null)
             return false;
 
-        groupName = (String) value;
         if (!permissions().getGroupSubjects().hasRegistered(groupName)) {
             Rewards.logger().warn("Group {} doesn't exist", groupName);
             return false;
@@ -57,16 +54,7 @@ public class GroupReward implements Reward {
             subNode = false;
         }
 
-        if (subNode) {
-            value = node.getNode("setgroup").getValue();
-
-            if (!(value instanceof Boolean))
-                return false;
-
-            setGroup = (Boolean) value;
-        } else {
-            setGroup = false;
-        }
+        setGroup = subNode && node.getNode("setgroup").getBoolean();
 
         return true;
     }

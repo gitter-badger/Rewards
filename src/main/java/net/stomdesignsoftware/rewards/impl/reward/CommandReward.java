@@ -15,13 +15,10 @@ public class CommandReward implements Reward {
 
     @Override
     public boolean init(ConfigurationNode node) {
-        Object value = node.getValue();
+        String temp = node.getString();
 
-        if (!(value instanceof String)) {
+        if(temp == null)
             return false;
-        }
-
-        String temp = (String) value;
 
         //Get rid of '/' prefix if any
         if (temp.charAt(0) == '/')

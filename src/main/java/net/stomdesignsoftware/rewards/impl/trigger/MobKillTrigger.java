@@ -20,12 +20,9 @@ public class MobKillTrigger implements Trigger {
 
     @Override
     public boolean init(ConfigurationNode node) {
-        Object value = node.getValue();
-        if (!(value instanceof String)) {
-            return false;
-        }
+        String value = node.getString();
 
-        Optional<EntityType> type = Sponge.getRegistry().getType(EntityType.class, (String) value);
+        Optional<EntityType> type = Sponge.getRegistry().getType(EntityType.class, value);
         if (!type.isPresent()) {
             Rewards.logger().warn("Invalid entity type {}. Types: {}", value, Sponge.getRegistry().getAllOf(EntityType.class).stream().filter(entityType ->
                     Creature.class.isAssignableFrom(entityType.getEntityClass())

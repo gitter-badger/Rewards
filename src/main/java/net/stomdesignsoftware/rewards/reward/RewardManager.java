@@ -111,6 +111,7 @@ public class RewardManager implements Consumer<Task> {
                     try {
                         Test test = testMap.get(oNode.getKey().toString()).newInstance();
                         if (!test.init(oNode)) {
+                            Rewards.debug("Test {} failed it initialize. Node {}", oNode.getKey().toString(), oNode);
                             continue;
                         }
                         tests.add(test);

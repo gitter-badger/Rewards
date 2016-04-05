@@ -29,11 +29,8 @@ public class PlaytimeTest implements Test {
             new EventListener();
 
         //Get value
-        Object value = node.getValue();
-        if(!(value instanceof Long))
-            return false;
-        testTime = (Long) value;
-        return true;
+        testTime = node.getLong();
+        return testTime != 0;
     }
 
     @Override

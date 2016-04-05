@@ -21,15 +21,15 @@ public class MessageReward implements Reward {
             subNode = true;
         }
 
-        Object value;
+        String temp;
 
         if(subNode) {
-            value = node.getNode("message").getValue();
+            temp = node.getNode("message").getString();
         } else {
-            value = node.getValue();
+            temp = node.getString();
         }
 
-        if(!(value instanceof String))
+        if(temp == null)
             return false;
 
         TextSerializer serializer = TextSerializers.TEXT_XML;
@@ -38,23 +38,26 @@ public class MessageReward implements Reward {
             subNode = false;
         }
 
-        if(subNode) {
-            value = node.getNode("type").getValue();
+        String type;
 
-            if(!(value instanceof String))
+        if(subNode) {
+            type = node.getNode("type").getString();
+
+            if(type == null)
                 return false;
+
             try {
-                serializer = TextType.valueOf((String) value).getSerializer();
+                serializer = TextType.valueOf(type).getSerializer();
             } catch (IllegalArgumentException e) {
-                Rewards.logger().warn("Invalid text type {}. Valid types are {}", value, TextType.values());
+                Rewards.logger().warn("Invalid text type {}. Valid types are {}", type, TextType.values());
                 return false;
             }
         }
 
         try {
-            this.message = serializer.deserialize((String) value);
+            this.message = serializer.deserialize(temp);
         } catch (TextParseException e) {
-            Rewards.logger().error("Unable to parse to text:\n{}", value, e);
+            Rewards.logger().error("Unable to parse to text:\n{}", temp, e);
             return false;
         }
 
