@@ -168,6 +168,9 @@ public class RewardManager implements Consumer<Task> {
                 triggerRewards.add(triggerReward);
             }
         }
+
+        if(!normalRewards.isEmpty())
+            loaded =true;
     }
 
     public LinkedList<NormalReward> getNormalRewards() {
