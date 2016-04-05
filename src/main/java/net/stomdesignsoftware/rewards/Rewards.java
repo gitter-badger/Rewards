@@ -37,7 +37,8 @@ public class Rewards {
     }
 
     public static void debug(String format, Object... args) {
-        logger().info(format, args);
+        if(instance.settings.DEBUG)
+            logger().info(format, args);
     }
 
     @Listener public void onConstruct(GameConstructionEvent event) {
@@ -46,12 +47,10 @@ public class Rewards {
 
     @Listener public void onInit(GameInitializationEvent event) {
 
-        debug("Initializing Configs");
         //Init Configs
         this.settingsConfig = new Config(configDir, "settings");
         this.rewardsConfig = new Config(configDir, "rewards");
 
-        debug("Initializing Settings");
         //Init Settings
         this.settings = settingsConfig.populate(Settings.MAPPER).orElseGet(() -> {
             Rewards.logger().error("Unable to populate Settings. Going to defaults.");

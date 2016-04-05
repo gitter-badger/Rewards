@@ -183,7 +183,7 @@ public class RewardManager implements Consumer<Task> {
         }
 
         rewardMap.put(name, rewardClass);
-        Rewards.debug("Registered {} rewards.", name);
+        Rewards.debug("Registered {} reward.", name);
     }
 
     public void registerTest(String name, Class<? extends Test> testClass) {
