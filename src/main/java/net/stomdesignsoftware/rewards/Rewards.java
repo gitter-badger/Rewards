@@ -46,10 +46,12 @@ public class Rewards {
 
     @Listener public void onInit(GameInitializationEvent event) {
 
+        debug("Initializing Configs");
         //Init Configs
         this.settingsConfig = new Config(configDir, "settings");
         this.rewardsConfig = new Config(configDir, "rewards");
 
+        debug("Initializing Settings");
         //Init Settings
         this.settings = settingsConfig.populate(Settings.MAPPER).orElseGet(() -> {
             Rewards.logger().error("Unable to populate Settings. Going to defaults.");
@@ -58,9 +60,11 @@ public class Rewards {
         this.settingsConfig.serialize(Settings.MAPPER, settings);
         this.settingsConfig.save();
 
+        debug("Initializing Reward Manager");
         //Init Reward Manager
         this.rewardManager = new RewardManager();
 
+        debug("Registering default rewards");
         //Register Rewards
         this.rewardManager.registerReward("group", GroupReward.class);
         this.rewardManager.registerReward("permission", PermissionReward.class);
@@ -68,17 +72,22 @@ public class Rewards {
         this.rewardManager.registerReward("hotbarmessage", MessageReward.class);
         this.rewardManager.registerReward("command", CommandReward.class);
 
+        debug("Registering default tests");
         //Register Tests
         this.rewardManager.registerTest("playtime", PlaytimeTest.class);
 
+        debug("Registering default triggers");
         //Register Trigger
         this.rewardManager.registerTrigger("mobkill", MobKillTrigger.class);
+        debug("Initialization complete");
     }
 
     @Listener public void onLoad(GameLoadCompleteEvent event) {
+        debug("Loading Rewards...");
         //Start Reward Manager
         this.rewardManager.loadConfig(rewardsConfig.getRoot());
         this.rewardManager.submit(this, settings.INTERVAL);
+        debug("Rewards loaded: {}", rewardManager);
     }
 
     public Path getConfigDir() {

@@ -183,6 +183,7 @@ public class RewardManager implements Consumer<Task> {
         }
 
         rewardMap.put(name, rewardClass);
+        Rewards.debug("Registered {} rewards.", name);
     }
 
     public void registerTest(String name, Class<? extends Test> testClass) {
@@ -191,6 +192,7 @@ public class RewardManager implements Consumer<Task> {
         }
 
         testMap.put(name, testClass);
+        Rewards.debug("Registered {} test.", name);
     }
 
     public void registerTrigger(String name, Class<? extends Trigger> triggerClass) {
@@ -199,10 +201,12 @@ public class RewardManager implements Consumer<Task> {
         }
 
         triggerMap.put(name, triggerClass);
+        Rewards.debug("Registered {} trigger.", name);
     }
 
     //NormalRewards task
     @Override public void accept(Task task) {
+        Rewards.debug("Running rewards task...");
         //Run event
         Sponge.getEventManager().post(new RewardTaskTickEvent(task.getName(), TimeUnit.MINUTES.convert(
             task.getInterval(), TimeUnit.MILLISECONDS)));
@@ -212,6 +216,7 @@ public class RewardManager implements Consumer<Task> {
         normalRewards.add(reward);
 
         Sponge.getServer().getOnlinePlayers().forEach(reward::test);
+        Rewards.debug("Rewards task finished.");
     }
 
     @Override
