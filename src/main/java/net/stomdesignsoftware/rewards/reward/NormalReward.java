@@ -1,6 +1,7 @@
 package net.stomdesignsoftware.rewards.reward;
 
 import com.google.common.base.Objects;
+import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Test;
 import org.spongepowered.api.entity.living.player.Player;
@@ -30,6 +31,7 @@ public class NormalReward {
 
         if (pass) {
             rewards.forEach(reward -> reward.reward(player));
+            Rewards.debug("Player: {} Passed Reward: {}", player.getName(), this.name);
         }
     }
 

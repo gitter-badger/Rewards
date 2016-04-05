@@ -1,6 +1,7 @@
 package net.stomdesignsoftware.rewards.reward;
 
 import com.google.common.base.Objects;
+import net.stomdesignsoftware.rewards.Rewards;
 import net.stomdesignsoftware.rewards.api.Reward;
 import net.stomdesignsoftware.rewards.api.Trigger;
 import net.stomdesignsoftware.rewards.event.RewardTriggerEvent;
@@ -22,6 +23,7 @@ public class TriggerReward {
 
     @Listener public void onTrigger(RewardTriggerEvent event) {
         if(triggers.contains(event.getTrigger())) {
+            Rewards.debug("Reward Triggered: {}", name);
             rewards.forEach(reward -> reward.reward(event.getTargetEntity()));
         }
     }

@@ -21,7 +21,6 @@ import org.spongepowered.api.plugin.Plugin;
 import java.nio.file.Path;
 
 
-//TODO Debug for Rewards
 //TODO Figure out a way to reward players once
 @Plugin(id = "stormdesignsoftware.rewards", name = "Rewards", version = "1.0.0", authors = {"tacticalsk8er"})
 public class Rewards {
