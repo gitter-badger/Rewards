@@ -10,6 +10,7 @@ import net.stomdesignsoftware.rewards.impl.trigger.MobKillTrigger;
 import net.stomdesignsoftware.rewards.reward.RewardManager;
 import net.stomdesignsoftware.rewards.util.Config;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
@@ -19,6 +20,10 @@ import org.spongepowered.api.plugin.Plugin;
 
 import java.nio.file.Path;
 
+
+//TODO Named Rewards
+//TODO Debug for Rewards
+//TODO Figure out a way to reward players once
 @Plugin(id = "stormdesignsoftware.rewards", name = "Rewards", version = "1.0.0", authors = {"tacticalsk8er"})
 public class Rewards {
 

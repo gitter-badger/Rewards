@@ -81,6 +81,7 @@ public class RewardManager implements Consumer<Task> {
                 try {
                     Reward reward = rewardMap.get(oNode.getKey().toString()).newInstance();
                     if (!reward.init(oNode)) {
+                        Rewards.debug("Reward {} failed it initialize. Node {}", oNode.getKey().toString(), oNode);
                         continue;
                     }
                     rewards.add(reward);
@@ -136,13 +137,14 @@ public class RewardManager implements Consumer<Task> {
                 List<Trigger> triggers = new LinkedList<>();
 
                 for (ConfigurationNode oNode : node.getNode("triggers").getChildrenMap().values()) {
-                    if (!testMap.containsKey(oNode.getKey().toString())) {
+                    if (!triggerMap.containsKey(oNode.getKey().toString())) {
                         continue;
                     }
 
                     try {
                         Trigger trigger = triggerMap.get(oNode.getKey().toString()).newInstance();
                         if (!trigger.init(oNode)) {
+                            Rewards.debug("Trigger {} failed it initialize. Node {}", oNode.getKey().toString(), oNode);
                             continue;
                         }
 

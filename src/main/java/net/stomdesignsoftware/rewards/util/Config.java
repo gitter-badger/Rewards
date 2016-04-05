@@ -27,7 +27,7 @@ public class Config {
 
         //Make directories if they don't exist.
         if (!configFile.getParent().toFile().exists()) {
-            configDir.toFile().mkdirs();
+            configFile.getParent().toFile().mkdirs();
         }
 
         //Create File if it doesn't exist.

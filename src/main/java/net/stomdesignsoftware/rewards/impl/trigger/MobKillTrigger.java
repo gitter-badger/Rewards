@@ -9,8 +9,10 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Named;
 
 import java.util.Optional;
 
@@ -40,7 +42,12 @@ public class MobKillTrigger implements Trigger {
     }
 
     @Listener
-    public void onMobKill(DestructEntityEvent.Death event, @First Player player) {
+    public void onMobKill(DestructEntityEvent.Death event, @First EntityDamageSource damageSource) {
+        if(!(damageSource.getSource() instanceof Player))
+            return;
+
+        Player player = (Player) damageSource.getSource();
+
         if (entityType.getEntityClass().isAssignableFrom(event.getTargetEntity().getType().getEntityClass())) {
             trigger(player);
         }

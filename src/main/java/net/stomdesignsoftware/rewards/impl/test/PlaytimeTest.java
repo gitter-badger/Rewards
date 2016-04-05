@@ -10,6 +10,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 
 public class PlaytimeTest implements Test {
 
@@ -44,13 +45,15 @@ public class PlaytimeTest implements Test {
         return Objects.toStringHelper(this).add("Test Time", testTime).toString();
     }
 
-    private final static class EventListener {
+    public final static class EventListener {
 
         private static boolean initialized = false;
 
         private EventListener() {
-            if(!initialized)
+            if(!initialized) {
                 Sponge.getEventManager().registerListeners(Rewards.instance, this);
+                Rewards.debug("Initialized PlaytimeTest listener.");
+            }
         }
 
         @Listener
@@ -59,7 +62,14 @@ public class PlaytimeTest implements Test {
                 long playTime = data().getNode(player.getUniqueId().toString()).getLong();
                 playTime += event.getInterval();
                 data().getNode(player.getUniqueId().toString()).setValue(playTime);
+                Rewards.debug("Player: {} | Playtime: {}", player.getName(), playTime);
             }
+        }
+
+        @Listener
+        public void onServerStop(GameStoppingServerEvent event) {
+            //Save data
+            data().save();
         }
     }
 }
