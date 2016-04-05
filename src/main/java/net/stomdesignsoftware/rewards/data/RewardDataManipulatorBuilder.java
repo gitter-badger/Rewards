@@ -7,9 +7,7 @@ import org.spongepowered.api.data.persistence.InvalidDataException;
 
 import java.util.Optional;
 
-/**
- * Created by tacticalsk8er on 4/4/16.
- */
+
 public class RewardDataManipulatorBuilder implements DataManipulatorBuilder<RewardDataManipulator, ImmutableRewardDataManipulator> {
     @Override
     public RewardDataManipulator create() {
